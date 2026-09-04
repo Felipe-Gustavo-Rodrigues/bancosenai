@@ -1,4 +1,5 @@
-﻿using BancoSENAIAPI.Models;
+﻿using BancoSENAIAPI.DB;
+using BancoSENAIAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BancoSENAIAPI.Controllers
@@ -7,27 +8,22 @@ namespace BancoSENAIAPI.Controllers
     [Route("api/v1/[controller]")]
     public class AgenciaController : ControllerBase
     {
-        private static List<Agencia> _agencias = new List<Agencia>
-        {
-            new Agencia { NumeroAgencia = 1001, Cidade = "Aracaju", SiglaEstado = "SE" },
-            new Agencia { NumeroAgencia = 2002, Cidade = "São Paulo", SiglaEstado = "SP" },
-            new Agencia { NumeroAgencia = 3003, Cidade = "Salvador", SiglaEstado = "BA" }
-        };
+
 
         [HttpGet]
         public IActionResult ListarTodas()
         {
-            return Ok(_agencias);
+            return Ok(Banco._agencias);
         }
 
         [HttpPost]
         public IActionResult Cadastrar([FromBody] Agencia novaAgencia)
         {
             
-            if (_agencias.Any(a => a.NumeroAgencia == novaAgencia.NumeroAgencia))
+            if (Banco._agencias.Any(a => a.NumeroAgencia == novaAgencia.NumeroAgencia))
                 return BadRequest(new { message = "Este número de agência já existe." });
 
-            _agencias.Add(novaAgencia);
+            Banco._agencias.Add(novaAgencia);
             // Retorna Status 201 Created conforme boas práticas REST [6, 8]
             return Created("", novaAgencia);
         }
@@ -35,7 +31,7 @@ namespace BancoSENAIAPI.Controllers
         [HttpGet("{codigo}")]
         public IActionResult ConsultarPorCodigo(int codigo)
         {
-            var agencia = _agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
+            var agencia = Banco._agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
 
             if (agencia == null)
                 return NotFound(new { message = "Agência não encontrada." }); // Status 404 [6, 7]
@@ -46,7 +42,7 @@ namespace BancoSENAIAPI.Controllers
         [HttpPut("{codigo}")]
         public IActionResult Alterar(int codigo, [FromBody] Agencia agenciaAtualizada)
         {
-            var agenciaExistente = _agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
+            var agenciaExistente = Banco._agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
 
             if (agenciaExistente == null) return NotFound();
 
@@ -60,11 +56,11 @@ namespace BancoSENAIAPI.Controllers
         [HttpDelete("{codigo}")]
         public IActionResult Excluir(int codigo)
         {
-            var agencia = _agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
+            var agencia = Banco._agencias.FirstOrDefault(a => a.NumeroAgencia == codigo);
 
             if (agencia == null) return NotFound();
 
-            _agencias.Remove(agencia);
+            Banco._agencias.Remove(agencia);
             return Ok(new { message = "Agência excluída com sucesso." }); // Status 200 [6]
         }
     }

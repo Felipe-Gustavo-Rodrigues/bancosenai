@@ -17,5 +17,13 @@ namespace BancoSENAIAPI.DB
             new Agencia { NumeroAgencia = 2002, Cidade = "São Paulo", SiglaEstado = "SP" },
             new Agencia { NumeroAgencia = 3003, Cidade = "Salvador", SiglaEstado = "BA" }
         };
+
+
+        public static List<Cliente> _cliente = new List<Cliente>
+        {
+            new Cliente(1,"Felipe", "00900900900", "M", "Rua A", "Aracaju", "SE", 1000, 1001),
+            new Cliente(2, "Caio", "00800800800", "M", "Rua B", "Aracaju", "SE", 1000, 2002),
+            new Cliente(3, "Paulo", "00700700700", "M", "Rua C", "Aracaju", "SE", 1000, 3003)
+        };
     }
 }

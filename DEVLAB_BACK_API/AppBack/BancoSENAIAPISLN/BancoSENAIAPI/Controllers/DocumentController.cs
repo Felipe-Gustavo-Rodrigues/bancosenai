@@ -25,7 +25,10 @@ namespace BancoSENAIAPI.Controllers
                 Directory.CreateDirectory(pastaCliente);
             }
 
-
+            if(!Banco._document.Any(e=> e.CodigoCliente == codigoCliente))
+            {
+                return BadRequest("Nenhum cliente encontrado");
+            }
             string extensao = Path.GetExtension(arquivo.FileName);
             string nomeOriginal = Path.GetFileNameWithoutExtension(arquivo.FileName);
             string novoNome = $"{codigoCliente}_{nomeOriginal}_{Guid.NewGuid()}{extensao}";
@@ -42,5 +45,7 @@ namespace BancoSENAIAPI.Controllers
 
             return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
+
+
     }
 }

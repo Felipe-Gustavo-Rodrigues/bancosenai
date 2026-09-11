@@ -19,11 +19,6 @@ namespace BancoSENAIAPI.Models
             CodigoCliente = codigoCliente;
         }
 
-        public bool ClienteExiste(int codigoCliente)
-        {
-            if(Banco._cliente.Any(e => e.CodigoCLiente == codigoCliente)) return true;
 
-            return false;
-        }
     }
 }

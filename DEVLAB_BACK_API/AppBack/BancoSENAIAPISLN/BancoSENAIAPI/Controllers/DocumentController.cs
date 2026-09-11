@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BancoSENAIAPI.DB;
+using BancoSENAIAPI.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BancoSENAIAPI.Controllers
 {
@@ -32,6 +35,12 @@ namespace BancoSENAIAPI.Controllers
             {
                 await arquivo.CopyToAsync(stream);
             }
+
+            var documentoNovo = new DocumentoMetadaDados(_nextId++, nomeOriginal, extensao, caminhoFinal, codigoCliente);
+
+            Banco._document.Add(documentoNovo);
+
+            return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
     }
 }

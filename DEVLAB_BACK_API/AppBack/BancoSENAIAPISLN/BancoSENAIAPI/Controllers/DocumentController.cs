@@ -15,8 +15,12 @@ namespace BancoSENAIAPI.Controllers
         {
             if(arquivo == null || arquivo.Length == 0) return BadRequest("Nenhum arquivo encontrado");
 
+            string pastaCliente = Path.Combine(_caminhoRaiz, codigoCliente.ToString());
 
-
+            if (!Directory.Exists(pastaCliente))
+            {
+                Directory.CreateDirectory(pastaCliente);
+            }
         }
     }
 }

@@ -25,5 +25,12 @@ namespace BancoSENAIAPI.DB
             new Cliente(2, "Caio", "00800800800", "M", "Rua B", "Aracaju", "SE", 1000, 2002),
             new Cliente(3, "Paulo", "00700700700", "M", "Rua C", "Aracaju", "SE", 1000, 3003)
         };
+
+        public static List<DocumentoMetadaDados> _document = new List<DocumentoMetadaDados>
+        {
+            new DocumentoMetadaDados(1,"Imagem de Carros", ".png", "/Arquivos/dados.png", 101),
+            new DocumentoMetadaDados(2, "Imagem de Barcos", ".png", "/Arquivos/dados.png", 101),
+            new DocumentoMetadaDados(3, "Imagem de Nada", ".png", "/Arquivos/dados.png", 102)
+        };
     }
 }

@@ -28,9 +28,9 @@ namespace BancoSENAIAPI.DB
 
         public static List<DocumentoMetadaDados> _document = new List<DocumentoMetadaDados>
         {
-            new DocumentoMetadaDados(1,"Imagem de Carros", "00900900900", "M", 101),
-            new DocumentoMetadaDados(2, "Imagem de Barcos", "00800800800", "M", 101),
-            new DocumentoMetadaDados(3, "Imagem de Nada", "00700700700", "M", 102)
+            new DocumentoMetadaDados(1,"Imagem de Carros", ".png", "/Arquivos/dados.png", 101),
+            new DocumentoMetadaDados(2, "Imagem de Barcos", ".png", "/Arquivos/dados.png", 101),
+            new DocumentoMetadaDados(3, "Imagem de Nada", ".png", "/Arquivos/dados.png", 102)
         };
     }
 }

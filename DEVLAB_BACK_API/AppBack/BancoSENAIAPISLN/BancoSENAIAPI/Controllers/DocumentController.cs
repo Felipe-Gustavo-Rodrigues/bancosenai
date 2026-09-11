@@ -9,5 +9,12 @@ namespace BancoSENAIAPI.Controllers
         private readonly string _caminhoRaiz = Path.Combine(Directory.GetCurrentDirectory(), "ClienteArquivo");
 
         private static int _nextId = 1;
+
+        [HttpPost("upload/{codigoCliente}")]
+        public async Task<IActionResult> PostArquivo(int codigoCliente, IFormFile arquivo)
+        {
+
+
+        }
     }
 }

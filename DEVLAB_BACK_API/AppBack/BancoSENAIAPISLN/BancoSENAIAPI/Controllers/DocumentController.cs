@@ -46,6 +46,11 @@ namespace BancoSENAIAPI.Controllers
             return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
 
-
+        [HttpGet("listagem/{codigoCliente}")]
+        public async Task<IActionResult> ListarDocumentos([FromRoute]int codigoCliente)
+        {
+            var documentos = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
+            return Ok(documentos);
+        }
     }
 }

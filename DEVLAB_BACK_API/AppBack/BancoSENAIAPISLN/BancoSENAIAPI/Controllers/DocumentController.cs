@@ -45,15 +45,55 @@ namespace BancoSENAIAPI.Controllers
 
             return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
-        [HttpGet("listar/{codigoCliente}")]
-        public async Task<IActionResult> GetDocumentoCliente([FromRoute] int codigoCliente)
+
+        [HttpGet("listagem/{codigoCliente}")]
+        public async Task<IActionResult> ListarDocumentos([FromRoute]int codigoCliente)
         {
-            if(!Banco._document.Any(e=> e.CodigoCliente == codigoCliente))
+            if(!Banco._document.Any(e => e.CodigoCliente == codigoCliente))
             {
                 return NotFound("Nenhum cliente encontrado");
             }
-            var documentoCliente = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
-            return Ok(documentoCliente);
+            var documentos = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
+            return Ok(documentos);
+        }
+
+        [HttpGet("cliente/{codigoCliente}/dowload/{id}")]
+        public async Task<IActionResult> DowloadArquivo([FromRoute] int id, [FromRoute] int codigoCliente)
+        {
+            if (!Banco._document.Any(e => e.ID == id))
+            {
+                return NotFound("Nenhum arquivo encontrado");
+            }
+
+            var documento = Banco._document.FirstOrDefault(e=> e.ID == id);
+            if(documento.CodigoCliente != codigoCliente)
+            {
+                return BadRequest("Você não pode ver esse arquivo");
+            }
+           
+            var fileByts = await System.IO.File.ReadAllBytesAsync(documento.Caminho);//Lista de bytes que forma  imagem
+
+            return File(fileByts, "aplication/octet-stream", documento.Nome);
+        }
+
+        [HttpDelete("cliente/{codigoCliente}/excluir/{id}")]
+        public async Task<IActionResult> DeleteDocument([FromRoute] int id, [FromRoute] int codigoCliente)
+        {
+            if (!Banco._document.Any(e => e.ID == id))
+            {
+                return NotFound("Nenhum arquivo encontrado");
+            }
+
+            var documento = Banco._document.FirstOrDefault(e => e.ID == id);
+            if (documento.CodigoCliente != codigoCliente)
+            {
+                return BadRequest("Você não pode ver esse arquivo");
+            }
+
+            Banco._document.Remove(documento);
+            System.IO.File.Delete(documento.Caminho);
+
+            return NoContent();
         }
     }
 }

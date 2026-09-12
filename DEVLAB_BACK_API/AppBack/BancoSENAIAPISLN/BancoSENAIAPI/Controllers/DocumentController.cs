@@ -49,12 +49,28 @@ namespace BancoSENAIAPI.Controllers
         [HttpGet("listagem/{codigoCliente}")]
         public async Task<IActionResult> ListarDocumentos([FromRoute]int codigoCliente)
         {
-            if(!Banco._cliente.Any(e => e.CodigoCLiente == codigoCliente))
+            if(!Banco._document.Any(e => e.CodigoCliente == codigoCliente))
             {
                 return NotFound("Nenhum cliente encontrado");
             }
             var documentos = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
             return Ok(documentos);
+        }
+
+        [HttpGet("dowload/{id}")]
+        public async Task<IActionResult> DowloadArquivo([FromRoute] int id)
+        {
+            if (!Banco._document.Any(e => e.ID == id))
+            {
+                return NotFound("Nenhum arquivo encontrado");
+            }
+
+            var documento = Banco._document.FirstOrDefault(e=> e.ID == id);
+
+           
+            var fileByts = await System.IO.File.ReadAllBytesAsync(documento.Caminho);//Lista de bytes que forma  imagem
+
+            return File(fileByts, "aplication/octet-stream", documento.Nome);
         }
     }
 }

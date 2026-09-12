@@ -57,8 +57,8 @@ namespace BancoSENAIAPI.Controllers
             return Ok(documentos);
         }
 
-        [HttpGet("dowload/{id}")]
-        public async Task<IActionResult> DowloadArquivo([FromRoute] int id)
+        [HttpGet("cliente/{codigoCliente}/dowload/{id}")]
+        public async Task<IActionResult> DowloadArquivo([FromRoute] int id, [FromRoute] int codigoCliente)
         {
             if (!Banco._document.Any(e => e.ID == id))
             {
@@ -66,7 +66,10 @@ namespace BancoSENAIAPI.Controllers
             }
 
             var documento = Banco._document.FirstOrDefault(e=> e.ID == id);
-
+            if(documento.CodigoCliente != codigoCliente)
+            {
+                return BadRequest("Você não pode ver esse arquivo");
+            }
            
             var fileByts = await System.IO.File.ReadAllBytesAsync(documento.Caminho);//Lista de bytes que forma  imagem
 

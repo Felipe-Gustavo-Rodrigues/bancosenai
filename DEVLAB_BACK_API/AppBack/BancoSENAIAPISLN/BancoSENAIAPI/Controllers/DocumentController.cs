@@ -25,7 +25,7 @@ namespace BancoSENAIAPI.Controllers
                 Directory.CreateDirectory(pastaCliente);
             }
 
-            if(!Banco._document.Any(e=> e.CodigoCliente == codigoCliente))
+            if(!Banco._cliente.Any(e=> e.CodigoCLiente == codigoCliente))
             {
                 return BadRequest("Nenhum cliente encontrado");
             }
@@ -45,7 +45,15 @@ namespace BancoSENAIAPI.Controllers
 
             return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
-
-
+        [HttpGet("listar/{codigoCliente}")]
+        public async Task<IActionResult> GetDocumentoCliente([FromRoute] int codigoCliente)
+        {
+            if(!Banco._document.Any(e=> e.CodigoCliente == codigoCliente))
+            {
+                return NotFound("Nenhum cliente encontrado");
+            }
+            var documentoCliente = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
+            return Ok(documentoCliente);
+        }
     }
 }

@@ -49,6 +49,10 @@ namespace BancoSENAIAPI.Controllers
         [HttpGet("listagem/{codigoCliente}")]
         public async Task<IActionResult> ListarDocumentos([FromRoute]int codigoCliente)
         {
+            if(!Banco._cliente.Any(e => e.CodigoCLiente == codigoCliente))
+            {
+                return NotFound("Nenhum cliente encontrado");
+            }
             var documentos = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
             return Ok(documentos);
         }

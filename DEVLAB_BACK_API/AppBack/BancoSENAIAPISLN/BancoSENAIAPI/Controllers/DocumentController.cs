@@ -25,7 +25,7 @@ namespace BancoSENAIAPI.Controllers
                 Directory.CreateDirectory(pastaCliente);
             }
 
-            if(!Banco._document.Any(e=> e.CodigoCliente == codigoCliente))
+            if(!Banco._cliente.Any(e=> e.CodigoCLiente == codigoCliente))
             {
                 return BadRequest("Nenhum cliente encontrado");
             }

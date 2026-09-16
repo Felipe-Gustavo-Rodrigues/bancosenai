@@ -16,11 +16,16 @@ namespace BancoSENAIAPI.Controllers
         [HttpPost("upload/{codigoCliente}")]
         public async Task<IActionResult> PostArquivo(int codigoCliente, IFormFile arquivo)
         {
+            double tamanhoMax = 2 * 1024 * 1024;
             if(arquivo == null || arquivo.Length == 0) return BadRequest("Nenhum arquivo encontrado");
 
+            if(arquivo.Length > tamanhoMax)
+            {
+                return BadRequest($"Tamanho do arquivo passou de 2MB, então não pode ser enviado");
+            }
             string pastaCliente = Path.Combine(_caminhoRaiz, codigoCliente.ToString());
 
-            if (!Directory.Exists(pastaCliente))
+            if (!Directory.Exists(pastaCliente)) 
             {
                 Directory.CreateDirectory(pastaCliente);
             }
@@ -30,6 +35,10 @@ namespace BancoSENAIAPI.Controllers
                 return BadRequest("Nenhum cliente encontrado");
             }
             string extensao = Path.GetExtension(arquivo.FileName);
+            if(extensao!= ".png" && extensao != ".jpg" && extensao != ".pdf")
+            {
+                return BadRequest("Somente pode ser enviados arquivos do tipo");
+            }
             string nomeOriginal = Path.GetFileNameWithoutExtension(arquivo.FileName);
             string novoNome = $"{codigoCliente}_{nomeOriginal}_{Guid.NewGuid()}{extensao}";
             string caminhoFinal = Path.Combine(pastaCliente, novoNome);

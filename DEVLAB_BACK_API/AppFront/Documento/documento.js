@@ -8,7 +8,7 @@ async function uploadDados() {
 
 
     if (!codigo || !arquivo) {
-        alert("Codigo do cliente vazio");
+        alert("Codigo do cliente vazio ou sem documento");
         return;
     }
     const dadosArquivos = new FormData();
@@ -19,14 +19,15 @@ async function uploadDados() {
         body: dadosArquivos
     });
 
-    if (!response.ok) {
-        const erro = await response.json();
+    if (response.ok) {
+        alert("Documento criado com sucessso");
+        inputCodigo.value = "";
+        inputFile.value = "";
+    } else {
+        const erro = await response.text();
         console.log(erro)
-        alert(`Erro ao criar documento: ${erro.messsage}`);
+        alert(`Erro ao criar documento: ${erro}`);
     }
-    alert("Documento criado com sucessso");
-    inputCodigo.value = "";
-    inputFile.value = "";
 }
 
 async function pesquisarCliente() {

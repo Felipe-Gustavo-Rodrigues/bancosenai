@@ -3,18 +3,34 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <title>Getsão de Documentos - Senai</title>
+    <title>Gestão de Documentos - Senai</title>
     <link rel="stylesheet" href="documento.css" />
 </head>
 <body>
     <h1>Documentos</h1>
     <div class="form-container">
-        <h2>Numero do cliente</h2>
-        <p>Defina o id do cliente</p>
-        <input type="text" id="codigoCliente" placeholder="Codigo do cliente" />
-        <input type="file" id="arquivoCliente"/>
-        <button onclick="uploadDados()">Upload</button>
+        <input type="text" id="codigoClienteD" placeholder="Codigo do cliente" />
+        <input type="file" id="arquivoCliente" />
+        <button id="btnSalvar" onclick="uploadDados()">Enviar</button>
     </div>
-    <script src="documento.js"></script>
+
+    <div class="form-container">
+        <input type="text" id="codigoClienteB" placeholder="Código do cliente" />
+        <button id="btnBusca" onclick="buscarDocumento()">Buscar</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Extensão</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tableDocumentos">
+        </tbody>
+    </table>
+    <script src="documento.js" charset="utf-8"></script>
 </body>
 </html>

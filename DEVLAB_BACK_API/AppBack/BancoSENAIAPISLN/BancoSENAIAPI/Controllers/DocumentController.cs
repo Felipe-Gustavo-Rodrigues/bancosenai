@@ -1,7 +1,9 @@
-﻿using BancoSENAIAPI.DB;
+﻿using BancoSENAIAPI.Data;
+using BancoSENAIAPI.DB;
 using BancoSENAIAPI.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BancoSENAIAPI.Controllers
 {
@@ -9,9 +11,14 @@ namespace BancoSENAIAPI.Controllers
     [Route("api/v1/[controller]")]
     public class DocumentController : Controller
     {
+        private AppDbContext _context;
+        public DocumentController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         private readonly string _caminhoRaiz = Path.Combine(Directory.GetCurrentDirectory(), "ClienteArquivo");
 
-        private static int _nextId = 1;
 
         [HttpPost("upload/{codigoCliente}")]
         public async Task<IActionResult> PostArquivo(int codigoCliente, IFormFile arquivo)
@@ -30,9 +37,9 @@ namespace BancoSENAIAPI.Controllers
                 Directory.CreateDirectory(pastaCliente);
             }
 
-            if(!Banco._cliente.Any(e=> e.CodigoCLiente == codigoCliente))
+            if(!await _context.Cliente.AnyAsync(e=> e.CodigoCLiente == codigoCliente))
             {
-                return BadRequest("Nenhum cliente encontrado");
+                return BadRequest("Nenhum cliente com dados encontrado");
             }
             string extensao = Path.GetExtension(arquivo.FileName);
             if(extensao!= ".png" && extensao != ".jpg" && extensao != ".pdf")
@@ -48,33 +55,33 @@ namespace BancoSENAIAPI.Controllers
                 await arquivo.CopyToAsync(stream);
             }
 
-            var documentoNovo = new DocumentoMetadaDados(_nextId++, nomeOriginal, extensao, caminhoFinal, codigoCliente);
-
-            Banco._document.Add(documentoNovo);
-
+            var documentoNovo = new DocumentoMetadaDados(nomeOriginal, extensao, caminhoFinal, codigoCliente);
+            Console.WriteLine(documentoNovo.Caminho);
+            _context.DocumentoMetadados.Add(documentoNovo);
+            await _context.SaveChangesAsync();
             return Ok(new {mensagem = "Documento criado com suscesso"});;
         }
 
         [HttpGet("listagem/{codigoCliente}")]
         public async Task<IActionResult> ListarDocumentos([FromRoute]int codigoCliente)
         {
-            if(!Banco._cliente.Any(e => e.CodigoCLiente == codigoCliente))
+            if(!await _context.DocumentoMetadados.AnyAsync(e => e.CodigoCliente == codigoCliente))
             {
                 return NotFound("Nenhum cliente");
             }
-            var documentos = Banco._document.Where(d => d.CodigoCliente == codigoCliente).ToList();
+            var documentos = await _context.DocumentoMetadados.Where(d => d.CodigoCliente == codigoCliente).ToListAsync();
             return Ok(documentos);
         }
 
         [HttpGet("cliente/{codigoCliente}/dowload/{id}")]
         public async Task<IActionResult> DowloadArquivo([FromRoute] int id, [FromRoute] int codigoCliente)
         {
-            if (!Banco._document.Any(e => e.ID == id))
+            if (!await _context.DocumentoMetadados.AnyAsync(e => e.ID == id))
             {
                 return NotFound("Nenhum arquivo encontrado");
             }
 
-            var documento = Banco._document.FirstOrDefault(e=> e.ID == id);
+            var documento = await _context.DocumentoMetadados.FirstOrDefaultAsync(e=> e.ID == id);
             if(documento.CodigoCliente != codigoCliente)
             {
                 return BadRequest("Você não pode ver esse arquivo");
@@ -88,18 +95,19 @@ namespace BancoSENAIAPI.Controllers
         [HttpDelete("cliente/{codigoCliente}/excluir/{id}")]
         public async Task<IActionResult> DeleteDocument([FromRoute] int id, [FromRoute] int codigoCliente)
         {
-            if (!Banco._document.Any(e => e.ID == id))
+            if (!await _context.DocumentoMetadados.AnyAsync(e => e.ID == id))
             {
                 return NotFound("Nenhum arquivo encontrado");
             }
 
-            var documento = Banco._document.FirstOrDefault(e => e.ID == id);
+            var documento = await _context.DocumentoMetadados.FirstOrDefaultAsync(e => e.ID == id);
             if (documento.CodigoCliente != codigoCliente)
             {
                 return BadRequest("Você não pode ver esse arquivo");
             }
 
-            Banco._document.Remove(documento);
+            _context.DocumentoMetadados.Remove(documento);
+            await _context.SaveChangesAsync();
             System.IO.File.Delete(documento.Caminho);
 
             return NoContent();

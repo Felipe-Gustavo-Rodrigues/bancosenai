@@ -1,6 +1,6 @@
 ﻿using BancoSENAIAPI.Data;
-using BancoSENAIAPI.DB;
 using BancoSENAIAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,7 @@ namespace BancoSENAIAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class CarteiraController:ControllerBase
     {
         private AppDbContext _context;
@@ -21,7 +22,7 @@ namespace BancoSENAIAPI.Controllers
             var carteiras =await _context.Carteira.ToListAsync();
             return Ok(carteiras);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] Carteira novaCarteira)
         {

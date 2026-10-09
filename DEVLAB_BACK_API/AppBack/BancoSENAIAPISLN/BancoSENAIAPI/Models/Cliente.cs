@@ -1,5 +1,4 @@
 ﻿
-using BancoSENAIAPI.DB;
 using System.ComponentModel.DataAnnotations;
 
 namespace BancoSENAIAPI.Models

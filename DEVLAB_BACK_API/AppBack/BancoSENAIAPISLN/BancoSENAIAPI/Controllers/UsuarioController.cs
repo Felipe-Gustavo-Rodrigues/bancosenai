@@ -21,6 +21,7 @@ namespace BancoSENAIAPI.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("registrar")]
         public async Task<IActionResult> Registrar([FromBody] RegisterRequestDto dto)
         {

@@ -1,6 +1,6 @@
 ﻿using BancoSENAIAPI.Data;
-using BancoSENAIAPI.DB;
 using BancoSENAIAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,7 @@ namespace BancoSENAIAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class AgenciaController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -24,7 +25,9 @@ namespace BancoSENAIAPI.Controllers
             return Ok(agencia);
         }
 
+
         [HttpPost]
+
         public async Task<IActionResult> Cadastrar([FromBody] Agencia novaAgencia)
         {
             
